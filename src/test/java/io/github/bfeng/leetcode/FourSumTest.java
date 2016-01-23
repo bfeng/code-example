@@ -34,7 +34,7 @@ public class FourSumTest {
         assertTrue(Utils.equalsWithoutOrder(expected, result));
     }
 
-    @Test(timeout = 10)
+    @Test(timeout = 6)
     public void testFourSumLargeInput() throws Exception {
         int[] input = new int[]{-496, -487, -446, -421, -420, -411, -409, -400, -374, -353, -322, -317, -293, -290,
                 -289, -279, -278, -260, -258, -257, -253, -247, -226, -198, -192, -182, -178, -174, -170, -163, -150,
