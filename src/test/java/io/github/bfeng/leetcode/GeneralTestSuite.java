@@ -1,10 +1,12 @@
 package io.github.bfeng.leetcode;
 
-import java.io.File;
-import java.io.FilenameFilter;
+import org.junit.Test;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
@@ -16,8 +18,8 @@ public abstract class GeneralTestSuite {
 
     private static final String EXPECTED_PREFIX = "expected-";
 
-    private List<SolutionCase> listAllCases(String testClassname) {
-        List<SolutionCase> solutionCases = new ArrayList<>();
+    private List<SolutionTestCase> listAllCases(String testClassname) {
+        List<SolutionTestCase> solutionTestCases = new ArrayList<>();
         try {
             String testResources = ClassLoader.getSystemResource(testClassname).getFile();
             File testResourceDir = new File(testResources);
@@ -28,26 +30,30 @@ public abstract class GeneralTestSuite {
                 }
             });
             for (File input : inputFiles) {
-                SolutionCase tmp = new SolutionCase(input);
+                SolutionTestCase tmp = new SolutionTestCase(input);
                 if (tmp.isValid()) {
-                    solutionCases.add(tmp);
+                    solutionTestCases.add(tmp);
                 }
             }
         } catch (Exception e) {
             fail(e.getMessage());
         }
 
-        return solutionCases;
+        return solutionTestCases;
     }
 
-    public void testAllCases(String testClass, String testMethod) {
-        List<SolutionCase> solutionCases = listAllCases(testClass);
-        for (SolutionCase solutionCase : solutionCases) {
-            solutionCase.test(testMethod);
+    abstract StringBuffer getOutput();
+
+    @Test
+    public void testAllCases() {
+        String testClassname = getClass().getSimpleName().substring(0, getClass().getSimpleName().lastIndexOf("Test"));
+        List<SolutionTestCase> solutionTestCases = listAllCases(testClassname);
+        for (SolutionTestCase solutionTestCase : solutionTestCases) {
+            solutionTestCase.test();
         }
     }
 
-    private class SolutionCase {
+    private class SolutionTestCase {
 
         private File input;
 
@@ -57,19 +63,16 @@ public abstract class GeneralTestSuite {
 
         private boolean valid;
 
-        public SolutionCase(File inputFile) {
+        public SolutionTestCase(File inputFile) {
             this.input = inputFile;
-            if (inputFile == null) {
-                valid = false;
-                return;
-            }
-            caseNo = inputFile.getName().substring(INPUT_PREFIX.length());
-            expected = new File(String.format("%s/%s%s", inputFile.getParent(), EXPECTED_PREFIX, caseNo));
-            if (expected == null) {
-                valid = false;
-            } else {
+            try {
+                caseNo = this.input.getName().substring(INPUT_PREFIX.length());
+                expected = new File(String.format("%s/%s%s", inputFile.getParent(), EXPECTED_PREFIX, caseNo));
+
                 valid = true;
-                System.err.printf("SolutionCase found: %s\n", input.getName());
+                System.out.printf("SolutionTestCase found: %s\n", input.getName());
+            } catch (NullPointerException e) {
+                valid = false;
             }
         }
 
@@ -77,8 +80,17 @@ public abstract class GeneralTestSuite {
             return this.valid;
         }
 
-        public void test(String testMethod) {
-            fail("");
+        public void test() {
+            StringBuffer expectedBuffer = new StringBuffer();
+            try (FileReader fileReader = new FileReader(expected);
+                 BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+                while (bufferedReader.ready()) {
+                    expectedBuffer.append(bufferedReader.readLine());
+                }
+                assertEquals(getOutput().toString(), expectedBuffer.toString());
+            } catch (IOException e) {
+                fail(e.getMessage());
+            }
         }
     }
 }
