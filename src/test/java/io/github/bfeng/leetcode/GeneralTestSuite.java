@@ -42,14 +42,15 @@ public abstract class GeneralTestSuite {
         return solutionTestCases;
     }
 
-    abstract StringBuffer getOutput();
+    abstract StringBuffer compute(StringBuffer input);
 
     @Test
     public void testAllCases() {
         String testClassname = getClass().getSimpleName().substring(0, getClass().getSimpleName().lastIndexOf("Test"));
         List<SolutionTestCase> solutionTestCases = listAllCases(testClassname);
         for (SolutionTestCase solutionTestCase : solutionTestCases) {
-            solutionTestCase.test();
+            if (solutionTestCase.isValid())
+                solutionTestCase.test();
         }
     }
 
@@ -80,6 +81,16 @@ public abstract class GeneralTestSuite {
             return this.valid;
         }
 
+        private StringBuffer getInput() throws IOException {
+            StringBuffer inputBuffer = new StringBuffer();
+            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(input))) {
+                while (bufferedReader.ready()) {
+                    inputBuffer.append(bufferedReader.readLine());
+                }
+                return inputBuffer;
+            }
+        }
+
         public void test() {
             StringBuffer expectedBuffer = new StringBuffer();
             try (FileReader fileReader = new FileReader(expected);
@@ -87,7 +98,7 @@ public abstract class GeneralTestSuite {
                 while (bufferedReader.ready()) {
                     expectedBuffer.append(bufferedReader.readLine());
                 }
-                assertEquals(getOutput().toString(), expectedBuffer.toString());
+                assertEquals(expectedBuffer.toString(), compute(getInput()).toString());
             } catch (IOException e) {
                 fail(e.getMessage());
             }

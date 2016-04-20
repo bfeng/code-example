@@ -5,7 +5,7 @@ package io.github.bfeng.leetcode;
  */
 public class TestAlgorithmTest extends GeneralTestSuite {
     @Override
-    StringBuffer getOutput() {
+    StringBuffer compute(StringBuffer input) {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(new TestAlgorithm().alwaysTrue());
         return stringBuffer;
