@@ -18,6 +18,8 @@ public abstract class GeneralTestSuite {
 
     private static final String EXPECTED_PREFIX = "expected-";
 
+    protected Solution solution;
+
     private List<SolutionTestCase> listAllCases(String testClassname) {
         List<SolutionTestCase> solutionTestCases = new ArrayList<>();
         try {
