@@ -88,6 +88,8 @@ public abstract class GeneralTestSuite {
             try (BufferedReader bufferedReader = new BufferedReader(new FileReader(input))) {
                 while (bufferedReader.ready()) {
                     inputBuffer.append(bufferedReader.readLine());
+                    if(bufferedReader.ready())
+                        inputBuffer.append('\n');
                 }
                 return inputBuffer;
             }
