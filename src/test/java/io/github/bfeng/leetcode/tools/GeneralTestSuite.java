@@ -1,5 +1,6 @@
-package io.github.bfeng.leetcode;
+package io.github.bfeng.leetcode.tools;
 
+import io.github.bfeng.leetcode.Solution;
 import org.junit.Test;
 
 import java.io.*;
@@ -17,6 +18,8 @@ public abstract class GeneralTestSuite {
     private static final String INPUT_PREFIX = "input-";
 
     private static final String EXPECTED_PREFIX = "expected-";
+
+    private SolutionInfo solutionInfo;
 
     protected Solution solution;
 
@@ -44,7 +47,11 @@ public abstract class GeneralTestSuite {
         return solutionTestCases;
     }
 
-    abstract StringBuffer compute(StringBuffer input);
+    private void applySolutionInfo(String className, String methodName) {
+        this.solutionInfo = new SolutionInfo(className, methodName);
+    }
+
+    abstract protected StringBuffer compute(StringBuffer input);
 
     @Test
     public void testAllCases() {

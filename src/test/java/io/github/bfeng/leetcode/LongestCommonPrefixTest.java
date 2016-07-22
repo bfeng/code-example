@@ -1,5 +1,6 @@
 package io.github.bfeng.leetcode;
 
+import io.github.bfeng.leetcode.tools.GeneralTestSuite;
 import org.junit.Before;
 
 public class LongestCommonPrefixTest extends GeneralTestSuite {
@@ -12,7 +13,7 @@ public class LongestCommonPrefixTest extends GeneralTestSuite {
     }
 
     @Override
-    StringBuffer compute(StringBuffer input) {
+    protected StringBuffer compute(StringBuffer input) {
         StringBuffer output = new StringBuffer();
         String[] inputArray = input.toString().split(",.+?");
         output.append(solution.longestCommonPrefix(inputArray));

@@ -1,6 +1,7 @@
 package io.github.bfeng.leetcode;
 
 
+import io.github.bfeng.leetcode.tools.GeneralTestSuite;
 import org.junit.Before;
 
 public class RegularExpressionMatchingTest extends GeneralTestSuite {
@@ -11,7 +12,7 @@ public class RegularExpressionMatchingTest extends GeneralTestSuite {
     }
 
     @Override
-    StringBuffer compute(StringBuffer input) {
+    protected StringBuffer compute(StringBuffer input) {
         StringBuffer output = new StringBuffer();
         String[] inputArray = input.toString().split("\n");
         output.append(((RegularExpressionMatching) solution).isMatch(inputArray[0], inputArray[1]));
